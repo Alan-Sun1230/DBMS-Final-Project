@@ -21,11 +21,11 @@ public class PanelCRecom extends JPanel{
     Statement stat;
     private PanelCLikedList pCLiked;
     
-    public PanelCRecom(Connection conn,int userID,PanelCLikedList pCLiked) throws SQLException {
+    public PanelCRecom(Connection conn,String username,PanelCLikedList pCLiked) throws SQLException {
         this.conn = conn;
         stat = conn.createStatement();
         this.pCLiked = pCLiked;
-    	buildBarList(conn,userID);
+    	buildBarList(conn,username);
         cComponent();
         cLayOut();
     }
@@ -222,28 +222,28 @@ public class PanelCRecom extends JPanel{
         add(pMain);
     }
 
-    private void buildBarList(Connection conn,int userID) {
+    private void buildBarList(Connection conn,String username) {
         //TODO: build 3 list with FrameCustomer.barList in corresbonding method
         //following code is only for testing and avoiding exceptions
     	
     	
-    	    String query1 = "SELECT DISTINCT db.UserID, db.Name " +
-    	                    "FROM d_bar db " +
-    	                    "JOIN d_customer dc ON db.Target_Audience = dc.Occupation " +
+    	    String query1 = "SELECT DISTINCT db.Name " +
+    	                    "FROM Bar db" +
+    	                    "JOIN Customer dc ON db.Target_Audience = dc.Occupation " +
     	                    "AND db.Featured_Activity = dc.Preferred_Activity " +
-    	                    "WHERE dc.UserID = " + userID;
+    	                    "WHERE dc.Name = " + username;
 
-    	    String query2 = "SELECT DISTINCT db.UserID, db.Name " +
-                    "FROM d_bar db " +
-                    "JOIN d_customer dc ON (db.Target_Audience = dc.Occupation " +
+    	    String query2 = "SELECT DISTINCT db.Name " +
+                    "FROM Bar db " +
+                    "JOIN Customer dc ON (db.Target_Audience = dc.Occupation " +
                     "OR db.Featured_Activity = dc.Preferred_Activity) " +
-                    "WHERE dc.UserID = " + userID + " " +
+                    "WHERE dc.Name = " + username + " " +
                     "AND db.Name NOT IN (" +
                     "  SELECT db2.Name " +
-                    "  FROM d_bar db2 " +
-                    "  JOIN d_customer dc2 ON db2.Target_Audience = dc2.Occupation " +
+                    "  FROM Bar db2 " +
+                    "  JOIN Customer dc2 ON db2.Target_Audience = dc2.Occupation " +
                     "  AND db2.Featured_Activity = dc2.Preferred_Activity " +
-                    "  WHERE dc2.UserID = " + userID + ")";
+                    "  WHERE dc2.Name = " + username + ")";
 
     	    try {
     	        Statement stat = conn.createStatement();
@@ -310,4 +310,3 @@ public class PanelCRecom extends JPanel{
         //listThird.add(FrameCustomer.barList.get(4));
         //listThird.add(FrameCustomer.barList.get(5));
     }
-
