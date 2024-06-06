@@ -124,6 +124,12 @@ public class FrameLogin extends JFrame {
                 
                 if (rbt_Customer.isSelected()) {
                     // Customer part.
+                		try {
+							Customer.getInstance().login(username, password);
+						} catch (Customer.WrongDataError e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
                 } else {
                     try {
                         Bar.getInstance().Login(username, password);
