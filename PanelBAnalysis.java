@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.SQLException;
+
 import javax.swing.*;
 
 public class PanelBAnalysis extends JPanel{
@@ -38,24 +40,35 @@ public class PanelBAnalysis extends JPanel{
         bt_Sort1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 //TODO: generate text and update
-            	
-                ta_content.set(Bar.getInstance().showResultSet());
+            	try {
+                	ta_Content.setText(Bar.getInstance().showResultSet("Sales figures"));
+            	}catch (WrongDataError e) {
+            		e.printStackTrace();
+            	}
             }
         });
 
-        bt_Sort2 = new JButton("Sort2");
+        bt_Sort2 = new JButton("Sales Volume");
         bt_Sort2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 //TODO: generate text and update
-                //ta_content.set()
+            	try {
+                	ta_Content.setText(Bar.getInstance().showResultSet("Sales Volume"));
+            	}catch (WrongDataError e) {
+            		e.printStackTrace();
+            	}
             }
         });
 
-        bt_Sort3 = new JButton("Sort3");
+        bt_Sort3 = new JButton("Net Income");
         bt_Sort3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 //TODO: generate text and update
-                //ta_content.set()
+            	try {
+                	ta_Content.setText(Bar.getInstance().showResultSet("Net Income"));
+            	}catch (WrongDataError e) {
+            		e.printStackTrace();
+            	}
             }
         });
     }
