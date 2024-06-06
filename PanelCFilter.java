@@ -123,7 +123,7 @@ public class PanelCFilter extends JPanel {
     private void buildBarList(int i,String sort) {
         listSort.clear();
         if(i == 0) {
-        	String query1 = "SELECT Name,Style,District,OpenTime,CloseTime FROM d_bar WHERE d_bar.Style = '" + sort + "'";
+        	String query1 = "SELECT Name,Style,District,OpenTime,CloseTime FROM Bar WHERE Bar.Style = '" + sort + "'";
         	ResultSet rs1;
     		try {
     			rs1 = stat.executeQuery(query1);
@@ -141,7 +141,7 @@ public class PanelCFilter extends JPanel {
     			e.printStackTrace();
     		}
         }else if(i == 1) {
-        	String query1 = "SELECT Name,Style,District,OpenTime,CloseTime FROM d_bar WHERE d_bar.District = '" + sort + "'";
+        	String query1 = "SELECT Name,Style,District,OpenTime,CloseTime FROM Bar WHERE Bar.District = '" + sort + "'";
         	ResultSet rs1;
     		try {
     			rs1 = stat.executeQuery(query1);
@@ -159,7 +159,7 @@ public class PanelCFilter extends JPanel {
     			e.printStackTrace();
     		}
         }else if(i == 2) {
-        	String query1 = "SELECT Name,Style,District,OpenTime,CloseTime FROM d_bar WHERE d_bar.OpenTime = '" + sort + "'";
+        	String query1 = "SELECT Name,Style,District,OpenTime,CloseTime FROM ar WHERE Bar.OpenTime = '" + sort + "'";
         	ResultSet rs1;
     		try {
     			rs1 = stat.executeQuery(query1);
@@ -177,7 +177,7 @@ public class PanelCFilter extends JPanel {
     			e.printStackTrace();
     		}
         }else if(i == 3) {
-        	String query1 = "SELECT Name,Style,District,OpenTime,CloseTime FROM d_bar WHERE d_bar.CloseTime = '" + sort + "'";
+        	String query1 = "SELECT Name,Style,District,OpenTime,CloseTime FROM Bar WHERE Bar.CloseTime = '" + sort + "'";
         	ResultSet rs1;
     		try {
     			rs1 = stat.executeQuery(query1);
