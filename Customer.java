@@ -6,10 +6,10 @@ import java.sql.Statement;
 
 public class Customer {
     private String server = "jdbc:mysql://140.119.19.73:3315/";
-    private String database = "111306061"; // change to your own database
+    private String database = "111306037"; // change to your own database
     private String url = server + database + "?useSSL=false";
-    private String DBUsername = "111306061"; // change to your own user name
-    private String DBPassword = "wrzvm"; // change to your own password
+    private String DBUsername = "111306037"; // change to your own user name
+    private String DBPassword = "58g95"; // change to your own password
 
     private static Customer instance;
 
@@ -24,11 +24,11 @@ public class Customer {
 
     public void login(String username, String password) throws WrongDataError {
         try (Connection conn = DriverManager.getConnection(url, DBUsername, DBPassword)) {
-            int userID = Integer.parseInt(username);
+            
             int passwords = Integer.parseInt(password);
-            String query1 = "SELECT UserID FROM d_user WHERE UserID = " + userID;
-            String query2 = "SELECT UserID FROM d_user WHERE Password = " + passwords + " AND UserID = " + userID;
-            String query3 = "SELECT UserID FROM d_customer WHERE UserID = " + userID;
+            String query1 = "SELECT Name FROM User WHERE Name = " + username;
+            String query2 = "SELECT Name FROM User WHERE Password = " + passwords + " AND UserID = " + username;
+            String query3 = "SELECT Name FROM Customer WHERE UserID = " + username;
 
             try (Statement stat = conn.createStatement();
                  ResultSet result1 = stat.executeQuery(query1)) {
@@ -38,17 +38,17 @@ public class Customer {
                         if (result2.next()) {
                             try (ResultSet result3 = stat.executeQuery(query3)) {
                                 if (result3.next()) {
-                                    new FrameCustomer(conn,userID);
+                                    new FrameCustomer(conn,username);
                                 } else {
-                                    throw new WrongDataError("CustomerID does not exist");
+                                    throw new WrongDataError("CustomerName does not exist");
                                 }
                             }
                         } else {
-                            throw new WrongDataError("UserID does not exist or Password is wrong");
+                            throw new WrongDataError("UserName does not exist or Password is wrong");
                         }
                     }
                 } else {
-                    throw new WrongDataError("UserID does not exist");
+                    throw new WrongDataError("UserName does not exist");
                 }
             }
         } catch (SQLException e) {
