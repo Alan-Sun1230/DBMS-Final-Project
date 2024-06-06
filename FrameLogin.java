@@ -121,17 +121,11 @@ public class FrameLogin extends JFrame {
             public void actionPerformed(ActionEvent event) {
                 String username = username_input.getText();
                 String password = new String(password_input.getPassword());
-                
                 if (rbt_Customer.isSelected()) {
-                    // Customer part.
-                		try {
-							Customer.getInstance().login(username, password);
-						} catch (Customer.WrongDataError e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+                	// Customer part.
+                	
                 } else {
-                    try {
+                	try {
                         Bar.getInstance().Login(username, password);
                     } catch (WrongDataError e) {
                         JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
@@ -212,4 +206,4 @@ public class FrameLogin extends JFrame {
 
         setVisible(true);
     }
-}
+} 
