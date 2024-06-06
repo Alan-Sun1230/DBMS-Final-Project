@@ -82,7 +82,7 @@ public class PanelCReview extends JPanel {
             	    PreparedStatement pstmt = null;
 
             	    // 准备 SQL 查询语句
-            	    String query = "INSERT INTO `d_review`(`ReviewID`, `BarID`, `CustomerID`, `Rating`, `Comment`) VALUES (?, (SELECT UserID FROM d_bar WHERE d_bar.Name = ?), ?, ?, ?)";
+            	    String query = "INSERT INTO `Review`(`ReviewID`, `BarID`, `CustomerID`, `Rating`, `Comment`) VALUES (?, (SELECT Name FROM Bar WHERE Bar.Name = ?), ?, ?, ?)";
 
             	    try {
             	        // 创建 PreparedStatement 对象
