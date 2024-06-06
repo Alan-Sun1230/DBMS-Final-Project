@@ -1,6 +1,7 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ public class Bar {
     	String DBUsername = "111306037"; // change to your own user name
     	String DBPassword = "58g95"; // change to your own password
 
-        private String query;
+        //private String query;
         private Statement stat;
         private String barName;
         private static Bar instance;
@@ -32,7 +33,7 @@ public class Bar {
     			setBarName(username);
     			stat = conn.createStatement();
 
-    			query = "SELECT * FROM User WHERE Name = '" + username + "' AND Password = '" + password + "'";
+    			String query = "SELECT * FROM User WHERE Name = '" + username + "' AND Password = '" + password + "'";
                 
     			ResultSet rs = stat.executeQuery(query);
     			if (!rs.next()) {
@@ -96,20 +97,108 @@ public class Bar {
         public String showResultSet(String sort) throws WrongDataError{
         	try(Connection conn = DriverManager.getConnection(url, DBUsername, DBPassword)) {
         		stat = conn.createStatement();
+        		String query = "";
         		switch(sort) {
         			case "Sales figures":
-        				String query = "SELECT Order.Item, sum(Order.total_Price) AS 'Sales figures', sum(Order.Amount) AS 'Sales volume', "
-        						+ "FROM Order JOIN Menu "
-        						+ "ON Order.BarName = Menu.BarName "
-        						//+ "AND Order.Item = Menu.Cocktail";
-        						+ "WHERE ";
-        				stat.executeQuery(query);
-        				//getString
-        			case "Sort2":
+        				query = "SELECT DISTINCT a.Item, SUM(a.total_Price) AS 'Sales figures', SUM(a.Amount) AS 'Sales volume' "
+        						+ "FROM cus_Order a JOIN Menu b "
+        						+ "ON a.BarName = b.BarName "
+        						+ "AND a.Item = b.Item "
+        						+ "WHERE a.BarName = '" + getBarName() + "' "
+        						+ "GROUP BY a.Item "
+        						+ "ORDER BY 'Sales figures' DESC";
+        				break;
         				
-        			case "Sort3":
+        			case "Sales Volume":
+        				query = "SELECT DISTINCT a.Item, SUM(a.total_Price) AS 'Sales figures', SUM(a.Amount) AS 'Sales volume' "
+        						+ "FROM cus_Order a JOIN Menu b "
+        						+ "ON a.BarName = b.BarName "
+        						+ "AND a.Item = b.Item "
+        						+ "WHERE a.BarName = '" + getBarName() + "' "
+        						+ "GROUP BY a.Item "
+        						+ "ORDER BY 'Sales Volume' DESC";
+        				break;
         				
+        			case "Net Income":
+        				query = "SELECT DISTINCT a.Item, SUM(a.total_Price) AS 'Sales figures', SUM(a.Amount) AS 'Sales volume', (b.Price - b.Cost)*SUM(a.Amount) AS 'Net Income' "
+        						+ "FROM cus_Order a JOIN Menu b "
+        						+ "ON a.BarName = b.BarName "
+        						+ "AND a.Item = b.Item "
+        						+ "WHERE a.BarName = '" + getBarName() + "' "
+        						+ "GROUP BY a.Item "
+        						+ "ORDER BY 'Sales figures' DESC";
+        				break;
         			
+        		}
+        		ResultSet rs = stat.executeQuery(query);
+				ResultSetMetaData metaData = rs.getMetaData();
+				int columnCount = metaData.getColumnCount();
+				String output = "";
+				for (int i = 1; i <= columnCount; i++) {
+					output += String.format("%-12s", metaData.getColumnLabel(i));
+				}
+				output += "\n";
+				while (rs.next()) {
+					for (int i = 1; i <= columnCount; i++) {
+						output += String.format("%-12s", rs.getString(i));
+					}
+					output += "\n";
+				}
+				return output; 
+				
+        	}catch (SQLException e) {
+        		e.printStackTrace();
+        	}
+        	return "";
+        }
+        
+        //PanelBManageMenu--------------
+        public void buildListMenu(ArrayList<MenuItemObject> listmenu) throws WrongDataError{
+        	try(Connection conn = DriverManager.getConnection(url, DBUsername, DBPassword)) {
+        		stat = conn.createStatement();
+        		String query = "SELECT Menu_ID, Item, Price, Cost FROM Menu WHERE BarName = '" + getBarName() + "'";
+        		ResultSet rs = stat.executeQuery(query);
+        		while(rs.next()) {
+        			listmenu.add(new MenuItemObject(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
+        		}
+        	}catch (SQLException e) {
+        		e.printStackTrace();
+        	}
+        }
+        
+        public void UpdateMenuDB(int menuID, String updateColumn, String updateData) throws WrongDataError{
+        	try(Connection conn = DriverManager.getConnection(url, DBUsername, DBPassword)) {
+        		stat = conn.createStatement();
+        		String query = "UPDATE Menu SET " + updateColumn + " = '" + updateData + "' WHERE Menu_ID = '" + menuID + "'";
+        		stat.execute(query);
+        	}catch (SQLException e) {
+        		e.printStackTrace();
+        	}
+        }
+        
+        //PanelBView
+        public void buildReview(ArrayList<String> viewCustomer, ArrayList<Integer> viewRates, ArrayList<String> viewComment, ArrayList<String> viewReply) throws WrongDataError{
+        	try(Connection conn = DriverManager.getConnection(url, DBUsername, DBPassword)) {
+        		stat = conn.createStatement();
+        		String query = "SELECT CustomerName, Rating, Comment, Reply FROM Review WHERE BarName = '" + getBarName() + "'";
+        		ResultSet rs = stat.executeQuery(query);
+        		while(rs.next()) {
+        			viewCustomer.add(rs.getString(1));
+        			viewRates.add(rs.getInt(2));
+        			viewComment.add(rs.getString(3));  
+        			viewReply.add(rs.getString(4));
+        		}
+        	}catch (SQLException e) {
+        		e.printStackTrace();
+        	}
+        }
+        
+        public void UpdateReply(ArrayList<String> viewCustomer, ArrayList<String> viewReply) throws WrongDataError{
+        	try(Connection conn = DriverManager.getConnection(url, DBUsername, DBPassword)) {
+        		stat = conn.createStatement();
+        		for(int i = 0; i < viewCustomer.size(); i++) {
+        			String query = "UPDATE Review SET Reply = '" + viewReply.get(i) + "' WHERE CustomerName = '" + viewCustomer.get(i) + "' AND BarName = '" + getBarName() + "'";
+        			stat.execute(query);
         		}
         	}catch (SQLException e) {
         		e.printStackTrace();
