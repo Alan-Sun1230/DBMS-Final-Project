@@ -22,18 +22,18 @@ public class FrameCustomer extends JFrame {
     Connection conn;
     Statement stat;
     String server = "jdbc:mysql://140.119.19.73:3315/";
-    String database = "111306061"; // 改为你的数据库名
+    String database = "111306037"; // 改为你的数据库名
     String url = server + database + "?useSSL=false";
-    String username = "111306061"; // 改为你的用户名
-    String password = "wrzvm"; // 改为你的密码
+    String username = "111306037"; // 改为你的用户名
+    String password = "58g95"; // 改为你的密码
     PanelCLikedList pc = new PanelCLikedList();
 
-    public FrameCustomer(Connection conn, int userID) throws SQLException {
+    public FrameCustomer(Connection conn, String userName) throws SQLException {
         this.conn = DriverManager.getConnection(url, username, password);
         this.conn = conn;
         stat = conn.createStatement();
         buildBarList();
-        cButton(userID);
+        cButton(userName);
         cComponent();
 
         setTitle("Customer");
@@ -44,7 +44,7 @@ public class FrameCustomer extends JFrame {
         getContentPane().add(pWestbtGroup, BorderLayout.WEST);
         getContentPane().add(pMain, BorderLayout.CENTER);
 
-        cLayOut(userID);
+        cLayOut(userName);
         setVisible(true);
     }
 
@@ -56,13 +56,13 @@ public class FrameCustomer extends JFrame {
         }
     }
 
-    private void cButton(int userID) {
+    private void cButton(String username) {
         bt_Recom = new JButton("Recommendate");
         bt_Recom.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 control = 0;
                 try {
-                    cLayOut(userID);
+                    cLayOut(username);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -74,7 +74,7 @@ public class FrameCustomer extends JFrame {
             public void actionPerformed(ActionEvent event) {
                 control = 1;
                 try {
-                    cLayOut(userID);
+                    cLayOut(username);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -86,7 +86,7 @@ public class FrameCustomer extends JFrame {
             public void actionPerformed(ActionEvent event) {
                 control = 2;
                 try {
-                    cLayOut(userID);
+                    cLayOut(username);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -98,7 +98,7 @@ public class FrameCustomer extends JFrame {
             public void actionPerformed(ActionEvent event) {
                 control = 3;
                 try {
-                    cLayOut(userID);
+                    cLayOut(username);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -132,7 +132,7 @@ public class FrameCustomer extends JFrame {
         btList.add(bt_LogOut);
     }
 
-    private void cLayOut(int userID) throws SQLException {
+    private void cLayOut(String Username) throws SQLException {
         pMain.removeAll();
         btResetAll();
 
@@ -141,7 +141,7 @@ public class FrameCustomer extends JFrame {
                 if (conn.isClosed()) {
                     conn = DriverManager.getConnection(url, username, password);
                 }
-                JPanel panelCRecom = new PanelCRecom(conn, userID, pc);
+                JPanel panelCRecom = new PanelCRecom(conn, Username, pc);
                 pMain.add(panelCRecom, BorderLayout.CENTER);
                 bt_Recom.setEnabled(false);
                 break;
@@ -185,7 +185,7 @@ public class FrameCustomer extends JFrame {
 
     private void buildBarList() throws SQLException {
         if (build) {
-            String sql = "SELECT Name, Style, District, OpenTime, CloseTime FROM d_bar";
+            String sql = "SELECT Name, Style, District, OpenTime, CloseTime FROM Bar";
             try (ResultSet rs = stat.executeQuery(sql)) {
                 while (rs.next()) {
                     String name = rs.getString("Name");
