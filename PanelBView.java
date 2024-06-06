@@ -9,9 +9,9 @@ public class PanelBView extends JPanel {
     private JButton bt_Submit;
 
     private ArrayList<String> viewCustomer = new ArrayList<>();
-    private ArrayList<String> viewRates = new ArrayList<>();
+    private ArrayList<Integer> viewRates = new ArrayList<>();
+    private ArrayList<String> viewComment = new ArrayList<>();
     private ArrayList<String> viewReply = new ArrayList<>();
-
     private JPanel pMain = new JPanel();
 
     public PanelBView() {
@@ -21,18 +21,14 @@ public class PanelBView extends JPanel {
     }
 
     private void cComponent() {      
-        viewCustomer.add("Coustomer 1");
-        viewCustomer.add("Coustomer 2");
-        viewCustomer.add("Coustomer 3");
-        viewCustomer.add("Coustomer 4");
-        viewCustomer.add("Coustomer 5");
+    	try {
+            Bar.getInstance().buildReview(viewCustomer, viewRates, viewComment, viewReply);
+        } catch (WrongDataError e) {
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
+        }
         //TODO: change to actual data;
         
-        viewRates.add("Review 1");
-        viewRates.add("Review 2");
-        viewRates.add("Review 3");
-        viewRates.add("Review 4");
-        viewRates.add("Review 5");
+        
         //TODO: change to actual data;
 
         for (String s:viewCustomer) {
@@ -46,8 +42,9 @@ public class PanelBView extends JPanel {
             pTemp.setLayout(new BorderLayout(5, 0));
 
             JLabel lblCustomer = new JLabel(viewCustomer.get(i) + ": ");
-            JLabel lblRates = new JLabel(viewRates.get(i));
-            JLabel lblReply = new JLabel();
+            JLabel lblRates = new JLabel(Integer.toString(viewRates.get(i)));
+            JLabel lblComment = new JLabel(viewComment.get(i));
+            JLabel lblReply = new JLabel(viewReply.get(i));
 
             JPanel pRight = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
             JPanel pLeft = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
@@ -70,6 +67,7 @@ public class PanelBView extends JPanel {
 
             pLeft.add(lblCustomer);
             pLeft.add(lblRates);
+            pLeft.add(lblComment);
             
             pRight.add(ta_Modify);
             pRight.add(bt_Modify);
@@ -93,14 +91,19 @@ public class PanelBView extends JPanel {
         bt_Submit = new JButton("Submit");
         bt_Submit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
-                int reply = JOptionPane.showConfirmDialog(pMain, "Submit?", "Submitting...", JOptionPane.YES_NO_OPTION);
-                if (reply == JOptionPane.YES_OPTION) {
-                    //TODO: update database
-                    
-                    JOptionPane.showMessageDialog(null, "Success!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    return;
+            	try {
+            		int reply = JOptionPane.showConfirmDialog(pMain, "Submit?", "Submitting...", JOptionPane.YES_NO_OPTION);
+                    if (reply == JOptionPane.YES_OPTION) {
+                        //TODO: update database
+                        Bar.getInstance().UpdateReply(viewCustomer, viewReply);
+                        JOptionPane.showMessageDialog(null, "Success!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        return;
+                    }
+                } catch (WrongDataError e) {
+                    JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
                 }
+                
             }
         });
     }
