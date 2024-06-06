@@ -35,7 +35,7 @@ public class FrameCustomer extends JFrame {
         buildBarList();
         cButton(userName);
         cComponent();
-
+        
         setTitle("Customer");
         setSize(1000, 618);
         setResizable(false);
@@ -166,6 +166,7 @@ public class FrameCustomer extends JFrame {
                     conn = DriverManager.getConnection(url, username, password);
                 }
                 // 使用已存在的PanelCLikedList对象
+                
                 pMain.add(pc, BorderLayout.CENTER);
                 bt_LikedList.setEnabled(false);
                 break;
@@ -185,10 +186,10 @@ public class FrameCustomer extends JFrame {
 
     private void buildBarList() throws SQLException {
         if (build) {
-            String sql = "SELECT Name, Style, District, OpenTime, CloseTime FROM Bar";
+            String sql = "SELECT BarName, Style, District, OpenTime, CloseTime FROM Bar";
             try (ResultSet rs = stat.executeQuery(sql)) {
                 while (rs.next()) {
-                    String name = rs.getString("Name");
+                    String name = rs.getString("BarName");
                     String style = rs.getString("Style");
                     String district = rs.getString("District");
                     String openTime = rs.getString("OpenTime");
