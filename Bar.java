@@ -100,33 +100,33 @@ public class Bar {
         		String query = "";
         		switch(sort) {
         			case "Sales figures":
-        				query = "SELECT DISTINCT a.Item, SUM(a.total_Price) AS 'Sales figures', SUM(a.Amount) AS 'Sales volume' "
+        				query = "SELECT a.Item, SUM(a.total_Price) AS Sales_figures, SUM(a.Amount) AS Sales_volume "
         						+ "FROM cus_Order a JOIN Menu b "
         						+ "ON a.BarName = b.BarName "
         						+ "AND a.Item = b.Item "
         						+ "WHERE a.BarName = '" + getBarName() + "' "
         						+ "GROUP BY a.Item "
-        						+ "ORDER BY 'Sales figures' DESC";
+        						+ "ORDER BY Sales_figures DESC";
         				break;
         				
         			case "Sales Volume":
-        				query = "SELECT DISTINCT a.Item, SUM(a.total_Price) AS 'Sales figures', SUM(a.Amount) AS 'Sales volume' "
+        				query = "SELECT a.Item, SUM(a.total_Price) AS Sales_figures, SUM(a.Amount) AS Sales_volume "
         						+ "FROM cus_Order a JOIN Menu b "
         						+ "ON a.BarName = b.BarName "
         						+ "AND a.Item = b.Item "
         						+ "WHERE a.BarName = '" + getBarName() + "' "
         						+ "GROUP BY a.Item "
-        						+ "ORDER BY 'Sales Volume' DESC";
+        						+ "ORDER BY Sales_volume DESC";
         				break;
         				
         			case "Net Income":
-        				query = "SELECT DISTINCT a.Item, SUM(a.total_Price) AS 'Sales figures', SUM(a.Amount) AS 'Sales volume', (b.Price - b.Cost)*SUM(a.Amount) AS 'Net Income' "
+        				query = "SELECT a.Item, SUM(a.total_Price) AS Sales_figures, SUM(a.Amount) AS Sales_volume, (b.Price - b.Cost)*Sales_volume AS Net_Income "
         						+ "FROM cus_Order a JOIN Menu b "
         						+ "ON a.BarName = b.BarName "
         						+ "AND a.Item = b.Item "
         						+ "WHERE a.BarName = '" + getBarName() + "' "
         						+ "GROUP BY a.Item "
-        						+ "ORDER BY 'Sales figures' DESC";
+        						+ "ORDER BY Net_Income DESC";
         				break;
         			
         		}
@@ -135,12 +135,12 @@ public class Bar {
 				int columnCount = metaData.getColumnCount();
 				String output = "";
 				for (int i = 1; i <= columnCount; i++) {
-					output += String.format("%-12s", metaData.getColumnLabel(i));
+					output += String.format("%-20s", metaData.getColumnLabel(i));
 				}
 				output += "\n";
 				while (rs.next()) {
 					for (int i = 1; i <= columnCount; i++) {
-						output += String.format("%-12s", rs.getString(i));
+						output += String.format("%-25s", rs.getString(i));
 					}
 					output += "\n";
 				}
