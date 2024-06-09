@@ -32,7 +32,7 @@ public class PanelBAnalysis extends JPanel{
         pNorthbtGroup = new JPanel(new FlowLayout());
         pNorthbtGroup.add(bt_Sort1);
         pNorthbtGroup.add(bt_Sort2);
-        pNorthbtGroup.add(bt_Sort3);
+        //pNorthbtGroup.add(bt_Sort3);
     }
 
     private void cButton() {
@@ -59,18 +59,18 @@ public class PanelBAnalysis extends JPanel{
             	}
             }
         });
-
-        bt_Sort3 = new JButton("Net Income");
-        bt_Sort3.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
+        
+        //bt_Sort3 = new JButton("Net Income");
+        //bt_Sort3.addActionListener(new ActionListener() {
+            //public void actionPerformed(ActionEvent event) {
                 //TODO: generate text and update
-            	try {
-                	ta_Content.setText(Bar.getInstance().showResultSet("Net Income"));
-            	}catch (WrongDataError e) {
-            		e.printStackTrace();
-            	}
-            }
-        });
+            	//try {
+                	//ta_Content.setText(Bar.getInstance().showResultSet("Net Income"));
+            	//}catch (WrongDataError e) {
+            		//e.printStackTrace();
+            	//}
+            //}
+        //});
     }
 
     private void cLayOut() {
